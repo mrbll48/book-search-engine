@@ -41,13 +41,14 @@ const resolvers = {
     },
 
     saveBook: async (parent, args, context) => {
-      console.log(context.user._id);
+      console.log(args.input);
       try {
         const updatedUser = await User.findOneAndUpdate(
           { _id: context.user._id },
-          { $addToSet: { savedBooks: args } },
-          { new: true, runValidators: true }
+          { $addToSet: { savedBooks: args.input } },
+          { new: true }
         );
+        console.log(updatedUser);
         return updatedUser;
       } catch (err) {
         console.log(err);
