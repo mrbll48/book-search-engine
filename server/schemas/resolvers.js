@@ -5,6 +5,7 @@ const { signToken } = require("../utils/auth");
 const resolvers = {
   Query: {
     me: async (parent, args, context) => {
+      console.log(context.user);
       if (context.user) {
         return await User.findOne({ _id: context.user._id });
       }
@@ -32,6 +33,7 @@ const resolvers = {
 
     addUser: async (parent, args, context) => {
       const user = await User.create(args);
+      console.log(args);
 
       if (!user) {
         throw new GraphQLError("error");
@@ -40,12 +42,12 @@ const resolvers = {
       return { token, user };
     },
 
-    saveBook: async (parent, args, context) => {
-      console.log(args.input);
+    saveBook: async (parent, { bookData }, context) => {
+      console.log(bookData);
       try {
         const updatedUser = await User.findOneAndUpdate(
           { _id: context.user._id },
-          { $addToSet: { savedBooks: args.input } },
+          { $addToSet: { savedBooks: bookData } },
           { new: true }
         );
         console.log(updatedUser);
